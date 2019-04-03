@@ -2,6 +2,8 @@ const { ApolloServer } = require("apollo-server-express");
 const express = require("express");
 const { typeDefs, resolvers } = require("./graphql");
 
+const port = process.env.port || 4000;
+
 const app = express();
 const server = new ApolloServer({ typeDefs, resolvers });
 
@@ -12,6 +14,8 @@ app.get("*", (_, res) => {
   res.sendFile(__dirname + "./build/index.html");
 });
 
-app.listen({ port: 4000 }, () =>
-  console.log(`🚀 Server ready at http://localhost:4000${server.graphqlPath}`)
+app.listen({ port }, () =>
+  console.log(
+    `🚀 Server ready at http://localhost:${port}${server.graphqlPath}`
+  )
 );

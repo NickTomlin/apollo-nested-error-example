@@ -97,7 +97,7 @@ class WishLists extends Component {
     const { data } = this.props;
     return (
       <div>
-        <h2>Wishlists</h2>
+        <h4>Wishlists</h4>
         {!data ? (
           "No Data"
         ) : (
@@ -123,7 +123,7 @@ class Orders extends Component {
     const { data } = this.props;
     return (
       <div>
-        <h2>Orders</h2>
+        <h4>Orders</h4>
 
         {!data ? (
           "No Data"
@@ -161,7 +161,8 @@ class App extends Component {
     return (
       <div className="App">
         <header className="App-header">
-          Internal Dashboard for customer {this.state.customerId}
+          <h1>Internal Dashboard for {this.state.customerId}</h1>
+
           <button
             onClick={() => this.setState({ customerId: "customer-6666" })}
           >
@@ -177,6 +178,9 @@ class App extends Component {
           >
             Empty Customer
           </button>
+        </header>
+
+        <section className="App-content">
           <Query
             // temporary workaround for https://github.com/apollographql/react-apollo/issues/2202
             key={this.state.customerId}
@@ -194,7 +198,7 @@ class App extends Component {
                   <ErrorDisplay errors={error} />
                   {data && data.customer ? (
                     <>
-                      {data.customer.name}
+                      <p>Customer Name: {data.customer.name}</p>
                       <WishLists data={data.customer.wishLists} />
                       <Orders data={data.customer.orders} />
                     </>
@@ -203,7 +207,7 @@ class App extends Component {
               );
             }}
           </Query>
-        </header>
+        </section>
       </div>
     );
   }
