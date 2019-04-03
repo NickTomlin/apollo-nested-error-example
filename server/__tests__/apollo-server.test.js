@@ -1,6 +1,6 @@
 "use strict";
 
-const { resolvers, typeDefs } = require("../apollo-server");
+const { resolvers, typeDefs } = require("../graphql");
 const { ApolloServer } = require("apollo-server");
 const { createTestClient } = require("apollo-server-testing");
 const gql = require("graphql-tag");

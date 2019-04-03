@@ -1,12 +1,14 @@
 import React, { Component } from "react";
 import { Query } from "react-apollo";
+import partition from "lodash.partition";
 import gql from "graphql-tag";
 import "./App.css";
 
-const GET_CUSTOMER_ORDERS = gql`
+export const GET_CUSTOMER_ORDERS = gql`
   query getCustomerOrders($customerId: ID!) {
     customer(id: $customerId) {
       id
+      name
       wishlists {
         id
         name
@@ -26,14 +28,76 @@ const GET_CUSTOMER_ORDERS = gql`
   }
 `;
 
+export const errorClass = "DataSourceError";
+
+class ErrorDetail extends Component {
+  render() {
+    const { error } = this.props;
+    const { name, owner, support } = error.extensions.exception;
+    // TODO: de-dupe errors (being mindful of paths that may be useful)
+    return (
+      <div>
+        {name}
+        {owner}
+        Reach out to {support}
+      </div>
+    );
+  }
+}
+
+/*
+  This is responsible for marshalling our custom DataSource errors and other errors
+  into something that a user can action on.
+
+  In a perfect world a use would know:
+    - who is responsible for the failure (is it us, or is it the external service)
+    - what to do about that failure (slack, jira, "nothing: it is being handled")
+    - how this affects them
+ */
+class ErrorDisplay extends Component {
+  render() {
+    const { errors } = this.props;
+    if (!errors) {
+      return null;
+    }
+    const [dataErrors, otherErrors] = partition(
+      errors.graphQLErrors,
+      e => e.extensions.code === errorClass
+    );
+
+    if (!errors || errors.length === 0) {
+      console.log("returning null", errors);
+      return null;
+    }
+
+    return (
+      <>
+        <h4>Data Errors</h4>
+        {dataErrors.map((d, idx) => {
+          return (
+            <div key={idx}>
+              {d.message}
+              <ErrorDetail error={d} />
+            </div>
+          );
+        })}
+        <h4>Other Errors</h4>
+        <ul>
+          {otherErrors.map(e => (
+            <li>{e.message}</li>
+          ))}
+        </ul>
+      </>
+    );
+  }
+}
+
 class WishLists extends Component {
   render() {
-    const { data, errors } = this.props;
-
+    const { data } = this.props;
     return (
       <div>
         <h2>Wishlists</h2>
-
         {!data ? (
           "No Data"
         ) : (
@@ -97,7 +161,7 @@ class App extends Component {
     return (
       <div className="App">
         <header className="App-header">
-          Internal Dashboard
+          Internal Dashboard for customer {this.state.customerId}
           <button
             onClick={() => this.setState({ customerId: "customer-6666" })}
           >
@@ -108,7 +172,16 @@ class App extends Component {
           >
             Good Customer
           </button>
+          <button
+            onClick={() => this.setState({ customerId: "customer-6578" })}
+          >
+            Empty Customer
+          </button>
           <Query
+            // temporary workaround for https://github.com/apollographql/react-apollo/issues/2202
+            key={this.state.customerId}
+            // if we _want_ to populate errors this is a good bet
+            // errorPolicy={"ignore"}
             query={GET_CUSTOMER_ORDERS}
             variables={{ customerId: this.state.customerId }}
           >
@@ -116,14 +189,16 @@ class App extends Component {
               if (loading) {
                 return "loading...";
               }
-              if (error) {
-                return "Error!" + JSON.stringify(error, null, 2);
-              }
-
               return (
                 <>
-                  <WishLists data={data.customer.wishLists} />
-                  <Orders data={data.customer.orders} />
+                  <ErrorDisplay errors={error} />
+                  {data && data.customer ? (
+                    <>
+                      {data.customer.name}
+                      <WishLists data={data.customer.wishLists} />
+                      <Orders data={data.customer.orders} />
+                    </>
+                  ) : null}
                 </>
               );
             }}

@@ -1,19 +1,19 @@
-# The "Query" type is the root of all GraphQL queries.
-# (A "Mutation" type will be covered later on.)
 type Query {
     customer(id: ID!) : Customer
-    products: [Product]
 }
 
 type Customer {
+    # First name and last name, we keep things simple here
+    # at ecommerce-site
     name: String
     id: ID
-    orders: [Order]
-    wishlists: [WishList]
+    orders: [Order]!
+    wishlists: [WishList]!
 }
 
 type Order {
     id: ID!
+    # The customer who purchased the item
     owner: ID!
     amount: Float
     products: [Product]!

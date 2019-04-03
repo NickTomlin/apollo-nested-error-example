@@ -13,3 +13,21 @@ npm i
 # start client and server
 npm start
 ```
+
+## Project Structure
+
+```
+src # client code
+server # server side code
+├── graphql.js # defines resolvers and loads schema.graphqls
+├── index.js # starts webserver
+├── orderService.js
+└── services # contains services that resolve edges of graph
+    ├── DataSourceError.js
+    ├── customer-service.js
+    └── ...
+```
+
+## Contributing
+
+Contributions or comments are welcome. Please open a PR!

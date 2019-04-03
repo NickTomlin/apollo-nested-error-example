@@ -1,5 +1,6 @@
 import { ApolloClient } from "apollo-client";
 import { InMemoryCache } from "apollo-cache-inmemory";
+import apolloLogger from "apollo-link-logger";
 import { HttpLink } from "apollo-link-http";
 import { onError } from "apollo-link-error";
 import { ApolloLink } from "apollo-link";
@@ -10,6 +11,7 @@ const client = new ApolloClient({
   name: "error-handling-example",
   version: "1.x.x",
   link: ApolloLink.from([
+    apolloLogger,
     onError(({ graphQLErrors, networkError }) => {
       if (graphQLErrors)
         graphQLErrors.map(({ message, locations, path }) =>

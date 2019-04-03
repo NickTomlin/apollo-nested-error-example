@@ -25,7 +25,7 @@ Object {
         "id": "wishlist-1234",
         "name": "Birthday items",
         "owner": Object {
-          "name": "Jane",
+          "name": "Good Customer",
         },
       },
     ],

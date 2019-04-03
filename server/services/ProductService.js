@@ -29,7 +29,7 @@ const products = [wheel, spoke, chain, brokenHub];
 
 module.exports = class ProductService {
   async find(id) {
-    delay(100);
+    await delay(100);
     const product = products.find(p => p.id === id);
 
     if (/6666/.test(id)) {
@@ -55,7 +55,7 @@ module.exports = class ProductService {
   }
 
   async all() {
-    delay(100);
+    await delay(100);
     return products;
   }
 };
