@@ -1,0 +1,34 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`basic service smoke test 1`] = `
+Object {
+  "customer": Object {
+    "id": "customer-1234",
+    "orders": Array [
+      Object {
+        "amount": 7.98,
+        "id": "order-1234",
+        "products": Array [
+          Object {
+            "name": "Chain",
+            "price": 2.99,
+          },
+          Object {
+            "name": "Spoke",
+            "price": 4.99,
+          },
+        ],
+      },
+    ],
+    "wishlists": Array [
+      Object {
+        "id": "wishlist-1234",
+        "name": "Birthday items",
+        "owner": Object {
+          "name": "Jane",
+        },
+      },
+    ],
+  },
+}
+`;

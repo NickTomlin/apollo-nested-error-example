@@ -1,0 +1,33 @@
+# The "Query" type is the root of all GraphQL queries.
+# (A "Mutation" type will be covered later on.)
+type Query {
+    customer(id: ID!) : Customer
+    products: [Product]
+}
+
+type Customer {
+    name: String
+    id: ID
+    orders: [Order]
+    wishlists: [WishList]
+}
+
+type Order {
+    id: ID!
+    owner: ID!
+    amount: Float
+    products: [Product]!
+}
+
+type WishList {
+    id: ID!
+    name: String
+    owner: Customer!
+}
+
+type Product {
+    id: ID!
+    # The global bike association identifier for this product
+    name: String!
+    price: Float!
+}
